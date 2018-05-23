@@ -3,12 +3,13 @@ import 'package:kulina/resources/decoration.dart';
 import 'package:kulina/resources/main_button.dart';
 import 'package:intl/intl.dart';
 import 'package:kulina/src/calendar/calendar.dart';
+import 'package:date_utils/date_utils.dart';
+
 
 class LanggananPage extends StatefulWidget {
   LanggananPage({Key key, this.title}) : super(key: key);
   final String title;
   final NumberFormat f = new NumberFormat();
-
 
   @override
   _Langganan createState() => new _Langganan();
@@ -25,6 +26,19 @@ class _Langganan extends State<LanggananPage> {
   Color _addColor = yellow;
   Color _addBorder = yellow;
 
+  List<DateTime> selectedData;
+
+  @override
+  void initState() {
+    var now = new DateTime.now().add(new Duration(days: 1));
+    var first = new DateTime(now.year,now.month,now.day);
+    var until = first.add(new Duration(days: 5));
+    var range = Utils.daysInRange(first, until).toList();
+    selectedData =range;
+    _handleLangganan(5, 25000);
+    _hari = 5;
+  }
+
   void _boxSub() {
     if (_box > 1)
       setState(() {
@@ -40,7 +54,7 @@ class _Langganan extends State<LanggananPage> {
     _handleLangganan(_hari, _perbox);
   }
 
-  void _handleLangganan(int hari, int harga){
+  void _handleLangganan(int hari, int harga) {
     setState(() {
       _hari = hari;
       _perbox = harga;
@@ -49,7 +63,7 @@ class _Langganan extends State<LanggananPage> {
     print("$_hari dan $_total");
   }
 
-  String fnumb(int number){
+  String fnumb(int number) {
     return widget.f.format(number);
   }
 
@@ -173,26 +187,24 @@ class _Langganan extends State<LanggananPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               new Expanded(
-                                  flex: 3,
-                                  child: new MainButton(
-                                      color: Colors.white,
-                                        border: yellow,
-                                        height: 50.0,
-                                        margin: new EdgeInsets.only(right: 8.0),
-                                        child:
-                                        new Text("$_box Box", style: big)),
-                                  ),
+                                flex: 3,
+                                child: new MainButton(
+                                    color: Colors.white,
+                                    border: yellow,
+                                    height: 50.0,
+                                    margin: new EdgeInsets.only(right: 8.0),
+                                    child: new Text("$_box Box", style: big)),
+                              ),
                               new Expanded(
-                                child:
-                                new GestureDetector(
+                                child: new GestureDetector(
                                   onTap: _boxSub,
-                                  onTapUp: (TapUpDetails details){
+                                  onTapUp: (TapUpDetails details) {
                                     setState(() {
                                       _subColor = yellow;
                                       _subBorder = yellow;
                                     });
                                   },
-                                  onTapDown: (TapDownDetails detauls){
+                                  onTapDown: (TapDownDetails detauls) {
                                     setState(() {
                                       _subColor = red;
                                       _subBorder = red;
@@ -212,27 +224,27 @@ class _Langganan extends State<LanggananPage> {
                               new Expanded(
                                 child: new GestureDetector(
                                   onTap: _boxAdd,
-                                  onTapUp: (TapUpDetails details){
+                                  onTapUp: (TapUpDetails details) {
                                     setState(() {
                                       _addColor = yellow;
                                       _addBorder = yellow;
                                     });
                                   },
-                                  onTapDown: (TapDownDetails detauls){
+                                  onTapDown: (TapDownDetails detauls) {
                                     setState(() {
                                       _addColor = red;
                                       _addBorder = red;
                                     });
                                   },
                                   child: new MainButton(
-                                  color: _addColor,
-                                  border: _addBorder,
-                                  rightRound: true,
-                                  height: 50.0,
-                                  child: new Icon(Icons.add,
-                                      color: Colors.white, size: 30.0),
+                                    color: _addColor,
+                                    border: _addBorder,
+                                    rightRound: true,
+                                    height: 50.0,
+                                    child: new Icon(Icons.add,
+                                        color: Colors.white, size: 30.0),
+                                  ),
                                 ),
-                              ),
                               ),
                             ],
                           ),
@@ -245,66 +257,69 @@ class _Langganan extends State<LanggananPage> {
                           new Row(
                             children: <Widget>[
                               new Expanded(
-                                child:
-                                new GestureDetector(
-                                  onTap: (){
+                                child: new GestureDetector(
+                                  onTap: () {
                                     _handleLangganan(20, 22500);
                                   },
-                                  onTapUp: (TapUpDetails details){
+                                  onTapUp: (TapUpDetails details) {
                                     setState(() {
                                       _addColor = yellow;
                                       _addBorder = yellow;
                                     });
                                   },
-                                  onTapDown: (TapDownDetails detauls){
+                                  onTapDown: (TapDownDetails detauls) {
                                     setState(() {
                                       _addColor = red;
                                       _addBorder = red;
                                     });
                                   },
-                                  child:  new MainButton(
-                                    margin: new EdgeInsets.only(right: 8.0, bottom: 8.0),
+                                  child: new MainButton(
+                                    margin: new EdgeInsets.only(
+                                        right: 8.0, bottom: 8.0),
                                     color: Colors.white,
                                     border: yellow,
                                     height: 70.0,
                                     child: new Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: <Widget>[
                                         new Text('20 Hari', style: big),
-                                        new Text('Rp 22,500/hari', style: medium)
+                                        new Text('Rp 22,500/hari',
+                                            style: medium)
                                       ],
                                     ),
                                   ),
                                 ),
-
                               ),
                               new Expanded(
                                 child: new GestureDetector(
-                                  onTap: (){
+                                  onTap: () {
                                     _handleLangganan(10, 24250);
                                   },
-                                  onTapUp: (TapUpDetails details){
+                                  onTapUp: (TapUpDetails details) {
                                     setState(() {
                                       _addColor = yellow;
                                       _addBorder = yellow;
                                     });
                                   },
-                                  onTapDown: (TapDownDetails detauls){
+                                  onTapDown: (TapDownDetails detauls) {
                                     setState(() {
                                       _addColor = red;
                                       _addBorder = red;
                                     });
                                   },
-                                  child:  new MainButton(
+                                  child: new MainButton(
                                     margin: new EdgeInsets.only(bottom: 8.0),
                                     color: Colors.white,
                                     border: yellow,
                                     height: 70.0,
                                     child: new Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: <Widget>[
                                         new Text('10 Hari', style: big),
-                                        new Text('Rp 24,250/hari', style: medium)
+                                        new Text('Rp 24,250/hari',
+                                            style: medium)
                                       ],
                                     ),
                                   ),
@@ -316,28 +331,29 @@ class _Langganan extends State<LanggananPage> {
                             children: <Widget>[
                               new Expanded(
                                 child: new GestureDetector(
-                                  onTap: (){
+                                  onTap: () {
                                     _handleLangganan(5, 25000);
                                   },
-                                  onTapUp: (TapUpDetails details){
+                                  onTapUp: (TapUpDetails details) {
                                     setState(() {
                                       _addColor = yellow;
                                       _addBorder = yellow;
                                     });
                                   },
-                                  onTapDown: (TapDownDetails detauls){
+                                  onTapDown: (TapDownDetails detauls) {
                                     setState(() {
                                       _addColor = red;
                                       _addBorder = red;
                                     });
                                   },
-                                  child:  new MainButton(
+                                  child: new MainButton(
                                     margin: new EdgeInsets.only(right: 8.0),
                                     color: Colors.white,
                                     border: yellow,
                                     height: 70.0,
                                     child: new Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: <Widget>[
                                         new Text('5 Hari', style: big),
                                         new Text('Rp 25,000/hari',
@@ -349,13 +365,14 @@ class _Langganan extends State<LanggananPage> {
                               ),
                               new Expanded(
                                 child: new GestureDetector(
-                                  child:  new MainButton(
+                                  child: new MainButton(
                                     margin: new EdgeInsets.only(right: 8.0),
                                     color: Colors.white,
                                     height: 70.0,
                                     border: yellow,
                                     child: new Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: <Widget>[
                                         new Text('Pilih Sendiri', style: big),
                                         new Text('Min. 2 hari', style: medium)
@@ -371,11 +388,11 @@ class _Langganan extends State<LanggananPage> {
                               new Expanded(
                                 child: new Container(
                                   margin:
-                                  new EdgeInsets.symmetric(vertical: 32.0),
+                                      new EdgeInsets.symmetric(vertical: 32.0),
                                   decoration: mainCard,
                                   child: new Calendar(
-                                    onDateSelected: (DateTime d){
-                                    },
+                                    onDateSelected: (a) {},
+                                    selectedData: selectedData,
                                   ),
                                   height: 350.0,
                                 ),
@@ -437,7 +454,7 @@ class _Langganan extends State<LanggananPage> {
                               children: <Widget>[
                                 new Text('Harga per box', style: medium),
                                 new Text(
-                                'Rp ${fnumb(_perbox)}',
+                                  'Rp ${fnumb(_perbox)}',
                                   style: medium,
                                 ),
                               ],

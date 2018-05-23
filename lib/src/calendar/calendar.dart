@@ -8,12 +8,14 @@ import 'package:date_utils/date_utils.dart';
 typedef DayBuilder(BuildContext context, DateTime day);
 
 class Calendar extends StatefulWidget {
-  final ValueChanged<DateTime> onDateSelected;
+  final ValueChanged<List<DateTime>> onDateSelected;
   final ValueChanged<Tuple2<DateTime, DateTime>> onSelectedRangeChange;
   final DayBuilder dayBuilder;
   final bool showChevronsToChangeRange;
+  final List<DateTime> selectedData;
 
   Calendar({
+    this.selectedData,
     this.onDateSelected,
     this.onSelectedRangeChange,
     this.dayBuilder,
@@ -27,21 +29,20 @@ class Calendar extends StatefulWidget {
 class _CalendarState extends State<Calendar> {
   final calendarUtils = new Utils();
   DateTime today = new DateTime.now();
-  DateTime batasBawah= new DateTime.now(); 
+  DateTime batasBawah = new DateTime.now();
   DateTime batasAtas = new DateTime.now().add(new Duration(days: 65));
-  
+
   List<DateTime> selectedMonthsDays;
   List<DateTime> _selectedDate;
   Tuple2<DateTime, DateTime> selectedRange;
   String currentMonth;
   String displayMonth;
-  
 
   List<DateTime> get selectedDate => _selectedDate;
 
   void initState() {
     super.initState();
-    _selectedDate = List<DateTime>();
+    _selectedDate = widget.selectedData;
     selectedMonthsDays = Utils.daysInMonth(today);
     displayMonth = Utils.formatMonth(Utils.firstDayOfWeek(today));
   }
@@ -56,18 +57,21 @@ class _CalendarState extends State<Calendar> {
     if (widget.showChevronsToChangeRange) {
       bool isPrevNotAvailable = today.month <= batasBawah.month;
       bool isNextNotAvailable = today.month >= batasAtas.month;
-      var prevColor = isPrevNotAvailable ? Colors.white:Colors.black87;
-      var nextColor = isNextNotAvailable ? Colors.white:Colors.black87;
-      var prevPress = isPrevNotAvailable ? null:previousMonth;
-      var nextPress = isNextNotAvailable ? null:nextMonth;
+      var prevColor = isPrevNotAvailable ? Colors.white : Colors.black87;
+      var nextColor = isNextNotAvailable ? Colors.white : Colors.black87;
+      var prevPress = isPrevNotAvailable ? null : previousMonth;
+      var nextPress = isNextNotAvailable ? null : nextMonth;
 
       leftOuterIcon = new IconButton(
         onPressed: prevPress,
-        icon: new Icon(Icons.chevron_left,color: prevColor),
+        icon: new Icon(Icons.chevron_left, color: prevColor),
       );
       rightOuterIcon = new IconButton(
         onPressed: nextPress,
-        icon: new Icon(Icons.chevron_right,color: nextColor,),
+        icon: new Icon(
+          Icons.chevron_right,
+          color: nextColor,
+        ),
       );
     } else {
       leftOuterIcon = new Container();
@@ -144,7 +148,7 @@ class _CalendarState extends State<Calendar> {
           monthEnded = true;
         }
 
-        before =day.isBefore(batasBawah) ?true:false;
+        before = day.isBefore(batasBawah) ? true : false;
         if (Utils.isFirstDayOfMonth(day)) {
           monthStarted = true;
         }
@@ -158,11 +162,12 @@ class _CalendarState extends State<Calendar> {
         } else {
           dayWidgets.add(
             new CalendarTile(
-              onDateSelected: before ? null : () => handleSelectedDateAndUserCallback(day),
+              onDateSelected:
+                  before ? null : () => handleSelectedDateAndUserCallback(day),
               date: day,
               isToday: Utils.isSameDay(day, batasBawah),
               isDisable: before,
-              dateStyles: configureDateStyle(monthStarted, monthEnded,day),
+              dateStyles: configureDateStyle(monthStarted, monthEnded, day),
               isSelected: selectedDate.contains(day),
             ),
           );
@@ -172,12 +177,12 @@ class _CalendarState extends State<Calendar> {
     return dayWidgets;
   }
 
-  TextStyle configureDateStyle(monthStarted, monthEnded,day) {
+  TextStyle configureDateStyle(monthStarted, monthEnded, day) {
     TextStyle dateStyles;
 
-    dateStyles = monthStarted && !monthEnded ?
-    new TextStyle(color: Colors.black) :
-    new TextStyle(color: Colors.black38);
+    dateStyles = monthStarted && !monthEnded
+        ? new TextStyle(color: Colors.black)
+        : new TextStyle(color: Colors.black38);
 
     return dateStyles;
   }
@@ -208,7 +213,9 @@ class _CalendarState extends State<Calendar> {
 
   static List<DateTime> daysInMonth(DateTime month) {
     var daysBefore = month.weekday;
-    var firstToDisplay = daysBefore == 7 ? month : month.subtract(new Duration(days: daysBefore));
+    var firstToDisplay = daysBefore == 7
+        ? month
+        : month.subtract(new Duration(days: daysBefore));
 
     var last = Utils.lastDayOfMonth(month);
 
@@ -233,8 +240,8 @@ class _CalendarState extends State<Calendar> {
       selectedMonthsDays = daysInMonth(prev);
       displayMonth = Utils.formatMonth(prev);
     });
-
   }
+
   var gestureStart;
   var gestureDirection;
 
@@ -259,11 +266,17 @@ class _CalendarState extends State<Calendar> {
   }
 
   void handleSelectedDateAndUserCallback(DateTime day) {
-    setState(() {
-      _selectedDate.add(day);
-    });
+    if (_selectedDate.contains(day))
+      setState(() {
+        _selectedDate.remove(day);
+      });
+    else
+      setState(() {
+        _selectedDate.add(day);
+      });
+    print(_selectedDate);
     if (widget.onDateSelected != null) {
-      widget.onDateSelected(day);
+      widget.onDateSelected(_selectedDate);
     }
   }
 }

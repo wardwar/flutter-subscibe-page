@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:kulina/src/calendar/calendar.dart';
 import 'package:date_utils/date_utils.dart';
 
-
 class LanggananPage extends StatefulWidget {
   LanggananPage({Key key, this.title}) : super(key: key);
   final String title;
@@ -30,13 +29,32 @@ class _Langganan extends State<LanggananPage> {
 
   @override
   void initState() {
-    var now = new DateTime.now().add(new Duration(days: 1));
-    var first = new DateTime(now.year,now.month,now.day);
-    var until = first.add(new Duration(days: 5));
-    var range = Utils.daysInRange(first, until).toList();
-    selectedData =range;
+    var range = dayRangeIgnoreHoliday();
+    selectedData = range;
     _handleLangganan(5, 25000);
     _hari = 5;
+  }
+
+  List<DateTime> dayRangeIgnoreHoliday() {
+    var now = new DateTime.now().add(new Duration(days: 1));
+    var first = new DateTime(now.year, now.month, now.day);
+    var until = first.add(new Duration(days: 5));
+    var range = Utils
+        .daysInRange(first, until)
+        .toList()
+        .where((DateTime date) => date.weekday != 6 && date.weekday != 7)
+        .toList();
+
+    if (range.length < 5) {
+      range.add(until);
+    }
+
+    while (range.length < 5) {
+      var newDate = until.add(new Duration(days: 1));
+      range.add(newDate);
+      range.where((DateTime date) => date.weekday != 6 || date.weekday != 7);
+    }
+    return range;
   }
 
   void _boxSub() {
@@ -60,7 +78,6 @@ class _Langganan extends State<LanggananPage> {
       _perbox = harga;
       _total = _box * (_hari * harga);
     });
-    print("$_hari dan $_total");
   }
 
   String fnumb(int number) {
@@ -390,11 +407,13 @@ class _Langganan extends State<LanggananPage> {
                                   margin:
                                       new EdgeInsets.symmetric(vertical: 32.0),
                                   decoration: mainCard,
-                                  child: new Calendar(
-                                    onDateSelected: (a) {},
-                                    selectedData: selectedData,
+                                  child: new ConstrainedBox(
+                                    constraints: new BoxConstraints(),
+                                    child: new Calendar(
+                                      onDateSelected: (a) {},
+                                      selectedData: selectedData,
+                                    ),
                                   ),
-                                  height: 350.0,
                                 ),
                               ),
                             ],

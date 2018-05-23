@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 import 'calendar_tile.dart';
-import 'package:date_utils/date_utils.dart';
+import 'date_utils.dart';
 
 typedef DayBuilder(BuildContext context, DateTime day);
 
@@ -31,7 +31,6 @@ class _CalendarState extends State<Calendar> {
   DateTime today = new DateTime.now();
   DateTime batasBawah = new DateTime.now();
   DateTime batasAtas = new DateTime.now().add(new Duration(days: 65));
-
   List<DateTime> selectedMonthsDays;
   List<DateTime> _selectedDate;
   Tuple2<DateTime, DateTime> selectedRange;
@@ -104,7 +103,7 @@ class _CalendarState extends State<Calendar> {
         child: new GridView.count(
           shrinkWrap: true,
           crossAxisCount: 7,
-          childAspectRatio: 1.0,
+          childAspectRatio: 4.4/5,
           mainAxisSpacing: 0.0,
           padding: new EdgeInsets.only(bottom: 0.0),
           children: calendarBuilder(),
@@ -118,13 +117,13 @@ class _CalendarState extends State<Calendar> {
     List<DateTime> calendarDays = selectedMonthsDays;
 
     const List<String> weekdays = const [
-      "MIN",
       "SEN",
       "SEL",
       "RAB",
       "KAM",
       "JUM",
-      "SAB"
+      "SAB",
+      "MIN"
     ];
 
     weekdays.forEach(
@@ -140,7 +139,7 @@ class _CalendarState extends State<Calendar> {
 
     bool monthStarted = false;
     bool monthEnded = false;
-    bool before = false;
+    bool disabled = false;
 
     calendarDays.forEach(
       (day) {
@@ -148,7 +147,13 @@ class _CalendarState extends State<Calendar> {
           monthEnded = true;
         }
 
-        before = day.isBefore(batasBawah) ? true : false;
+        if(day.isBefore(batasBawah))
+          disabled = true;
+        else if(day.weekday ==6 || day.weekday == 7)
+          disabled=true;
+        else
+          disabled=false;
+
         if (Utils.isFirstDayOfMonth(day)) {
           monthStarted = true;
         }
@@ -163,10 +168,10 @@ class _CalendarState extends State<Calendar> {
           dayWidgets.add(
             new CalendarTile(
               onDateSelected:
-                  before ? null : () => handleSelectedDateAndUserCallback(day),
+                  disabled ? null : () => handleSelectedDateAndUserCallback(day),
               date: day,
               isToday: Utils.isSameDay(day, batasBawah),
-              isDisable: before,
+              isDisable: disabled,
               dateStyles: configureDateStyle(monthStarted, monthEnded, day),
               isSelected: selectedDate.contains(day),
             ),
@@ -211,24 +216,11 @@ class _CalendarState extends State<Calendar> {
     });
   }
 
-  static List<DateTime> daysInMonth(DateTime month) {
-    var daysBefore = month.weekday;
-    var firstToDisplay = daysBefore == 7
-        ? month
-        : month.subtract(new Duration(days: daysBefore));
-
-    var last = Utils.lastDayOfMonth(month);
-
-    var daysAfter = 7 - last.weekday;
-    var lastToDisplay = last.add(new Duration(days: daysAfter));
-    return Utils.daysInRange(firstToDisplay, lastToDisplay).toList();
-  }
-
   void nextMonth() {
     setState(() {
       var next = Utils.nextMonth(today);
       today = next;
-      selectedMonthsDays = daysInMonth(next);
+      selectedMonthsDays = Utils.daysInMonth(next);
       displayMonth = Utils.formatMonth(next);
     });
   }
@@ -237,7 +229,7 @@ class _CalendarState extends State<Calendar> {
     setState(() {
       var prev = Utils.previousMonth(today);
       today = prev;
-      selectedMonthsDays = daysInMonth(prev);
+      selectedMonthsDays = Utils.daysInMonth(prev);
       displayMonth = Utils.formatMonth(prev);
     });
   }
@@ -266,13 +258,11 @@ class _CalendarState extends State<Calendar> {
   }
 
   void handleSelectedDateAndUserCallback(DateTime day) {
-    if (_selectedDate.contains(day))
       setState(() {
-        _selectedDate.remove(day);
-      });
-    else
-      setState(() {
-        _selectedDate.add(day);
+        if (_selectedDate.contains(day))
+          _selectedDate.remove(day);
+        else
+          _selectedDate.add(day);
       });
     print(_selectedDate);
     if (widget.onDateSelected != null) {

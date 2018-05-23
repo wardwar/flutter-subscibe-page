@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 
 Color yellow = const Color(0xfffd9714);
 Color red = const Color(0xFFfa5034);
+Color red12 = const Color(0x97fa5034);
 Color cream = const Color(0xfffef4e7);
 Color greyDiv = const Color(0xfff2f3f4);
 
 TextStyle big = new TextStyle(
     fontWeight: FontWeight.bold, fontSize: 18.0, color: Colors.black54);
 
+TextStyle bigWhite = new TextStyle(
+    fontWeight: FontWeight.bold, fontSize: 18.0, color: Colors.white);
+
 TextStyle medium = new TextStyle(fontSize: 16.0, color: Colors.black54);
+
+TextStyle mediumWhite = new TextStyle(fontSize: 16.0, color: Colors.white);
 
 final step = new BoxDecoration(
   border: new Border.all(
@@ -58,7 +64,7 @@ final mainButton = new BoxDecoration(
   shape: BoxShape.rectangle,
   boxShadow: <BoxShadow>[
     new BoxShadow(
-        color: red,
+        color: red12,
         blurRadius: 30.0,
         offset: new Offset(0.0, 0.0),
         spreadRadius: 0.0

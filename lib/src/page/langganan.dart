@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kulina/resources/decoration.dart';
-import 'package:kulina/resources/main_button.dart';
+import 'package:kulina/resources/hover_button.dart';
+import 'package:kulina/resources/toggle_button.dart';
 import 'package:intl/intl.dart';
 import 'package:kulina/src/calendar/calendar.dart';
 import 'package:date_utils/date_utils.dart';
@@ -19,11 +20,33 @@ class _Langganan extends State<LanggananPage> {
   int _hari = 0;
   int _total = 0;
   int _perbox = 0;
-  Color _subColor = yellow;
-  Color _subBorder = yellow;
+  bool _20Hari = false;
+  bool _10Hari = false;
+  bool _5Hari = true;
+  bool _pilihSendiri = false;
 
-  Color _addColor = yellow;
-  Color _addBorder = yellow;
+  void _handleHari(int hari) {
+    setState(() {
+      _resetButton();
+      if (hari == 20)
+        _20Hari = true;
+      else if (hari == 10)
+        _10Hari = true;
+      else if (hari == 5)
+        _5Hari = true;
+      else
+        _pilihSendiri = true;
+    });
+  }
+
+  void _resetButton() {
+    setState(() {
+      _20Hari = false;
+      _10Hari = false;
+      _5Hari = false;
+      _pilihSendiri = false;
+    });
+  }
 
   List<DateTime> selectedData;
 
@@ -77,6 +100,7 @@ class _Langganan extends State<LanggananPage> {
       _hari = hari;
       _perbox = harga;
       _total = _box * (_hari * harga);
+      _handleHari(hari);
     });
   }
 
@@ -205,62 +229,36 @@ class _Langganan extends State<LanggananPage> {
                             children: <Widget>[
                               new Expanded(
                                 flex: 3,
-                                child: new MainButton(
-                                    color: Colors.white,
+                                child: new HoverButton(
+                                    fill: Colors.white,
                                     border: yellow,
                                     height: 50.0,
                                     margin: new EdgeInsets.only(right: 8.0),
                                     child: new Text("$_box Box", style: big)),
                               ),
                               new Expanded(
-                                child: new GestureDetector(
-                                  onTap: _boxSub,
-                                  onTapUp: (TapUpDetails details) {
-                                    setState(() {
-                                      _subColor = yellow;
-                                      _subBorder = yellow;
-                                    });
-                                  },
-                                  onTapDown: (TapDownDetails detauls) {
-                                    setState(() {
-                                      _subColor = red;
-                                      _subBorder = red;
-                                    });
-                                  },
-                                  child: new MainButton(
-                                    color: _subColor,
-                                    border: _subBorder,
-                                    margin: new EdgeInsets.only(right: 2.0),
-                                    leftRound: true,
-                                    height: 50.0,
-                                    child: new Icon(Icons.remove,
-                                        color: Colors.white, size: 30.0),
-                                  ),
+                                child: new HoverButton(
+                                  onPressed: _boxSub,
+                                  higlight: red,
+                                  fill: yellow,
+                                  border: red,
+                                  margin: new EdgeInsets.only(right: 2.0),
+                                  leftRound: true,
+                                  height: 50.0,
+                                  child: new Icon(Icons.remove,
+                                      color: Colors.white, size: 30.0),
                                 ),
                               ),
                               new Expanded(
-                                child: new GestureDetector(
-                                  onTap: _boxAdd,
-                                  onTapUp: (TapUpDetails details) {
-                                    setState(() {
-                                      _addColor = yellow;
-                                      _addBorder = yellow;
-                                    });
-                                  },
-                                  onTapDown: (TapDownDetails detauls) {
-                                    setState(() {
-                                      _addColor = red;
-                                      _addBorder = red;
-                                    });
-                                  },
-                                  child: new MainButton(
-                                    color: _addColor,
-                                    border: _addBorder,
-                                    rightRound: true,
-                                    height: 50.0,
-                                    child: new Icon(Icons.add,
-                                        color: Colors.white, size: 30.0),
-                                  ),
+                                child: new HoverButton(
+                                  onPressed: _boxAdd,
+                                  higlight: red,
+                                  fill: yellow,
+                                  border: red,
+                                  rightRound: true,
+                                  height: 50.0,
+                                  child: new Icon(Icons.add,
+                                      color: Colors.white, size: 30.0),
                                 ),
                               ),
                             ],
@@ -274,71 +272,44 @@ class _Langganan extends State<LanggananPage> {
                           new Row(
                             children: <Widget>[
                               new Expanded(
-                                child: new GestureDetector(
-                                  onTap: () {
+                                child: new ToggleButton(
+                                  toggel: () {
                                     _handleLangganan(20, 22500);
                                   },
-                                  onTapUp: (TapUpDetails details) {
-                                    setState(() {
-                                      _addColor = yellow;
-                                      _addBorder = yellow;
-                                    });
-                                  },
-                                  onTapDown: (TapDownDetails detauls) {
-                                    setState(() {
-                                      _addColor = red;
-                                      _addBorder = red;
-                                    });
-                                  },
-                                  child: new MainButton(
-                                    margin: new EdgeInsets.only(
-                                        right: 8.0, bottom: 8.0),
-                                    color: Colors.white,
-                                    border: yellow,
-                                    height: 70.0,
-                                    child: new Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        new Text('20 Hari', style: big),
-                                        new Text('Rp 22,500/hari',
-                                            style: medium)
-                                      ],
-                                    ),
+                                  margin: new EdgeInsets.only(
+                                      right: 4.0, bottom: 8.0),
+                                  fill: _20Hari?yellow:Colors.white,
+                                  border: yellow,
+                                  height: 70.0,
+                                  child: new Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      new Text('20 Hari',
+                                          style: _20Hari ? bigWhite : big),
+                                      new Text('Rp 22,500/hari',
+                                          style: _20Hari ? mediumWhite : medium)
+                                    ],
                                   ),
                                 ),
                               ),
                               new Expanded(
-                                child: new GestureDetector(
-                                  onTap: () {
+                                child: new ToggleButton(
+                                  margin: new EdgeInsets.only(
+                                      bottom: 8.0, left: 4.0),
+                                  fill: _10Hari ? yellow : Colors.white,
+                                  toggel: () {
                                     _handleLangganan(10, 24250);
                                   },
-                                  onTapUp: (TapUpDetails details) {
-                                    setState(() {
-                                      _addColor = yellow;
-                                      _addBorder = yellow;
-                                    });
-                                  },
-                                  onTapDown: (TapDownDetails detauls) {
-                                    setState(() {
-                                      _addColor = red;
-                                      _addBorder = red;
-                                    });
-                                  },
-                                  child: new MainButton(
-                                    margin: new EdgeInsets.only(bottom: 8.0),
-                                    color: Colors.white,
-                                    border: yellow,
-                                    height: 70.0,
-                                    child: new Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        new Text('10 Hari', style: big),
-                                        new Text('Rp 24,250/hari',
-                                            style: medium)
-                                      ],
-                                    ),
+                                  border: yellow,
+                                  height: 70.0,
+                                  child: new Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      new Text('10 Hari',
+                                          style: _10Hari ? bigWhite : big),
+                                      new Text('Rp 24,250/hari',
+                                          style: _10Hari ? mediumWhite : medium)
+                                    ],
                                   ),
                                 ),
                               ),
@@ -347,54 +318,40 @@ class _Langganan extends State<LanggananPage> {
                           new Row(
                             children: <Widget>[
                               new Expanded(
-                                child: new GestureDetector(
-                                  onTap: () {
+                                child: new ToggleButton(
+                                  toggel: () {
                                     _handleLangganan(5, 25000);
                                   },
-                                  onTapUp: (TapUpDetails details) {
-                                    setState(() {
-                                      _addColor = yellow;
-                                      _addBorder = yellow;
-                                    });
-                                  },
-                                  onTapDown: (TapDownDetails detauls) {
-                                    setState(() {
-                                      _addColor = red;
-                                      _addBorder = red;
-                                    });
-                                  },
-                                  child: new MainButton(
-                                    margin: new EdgeInsets.only(right: 8.0),
-                                    color: Colors.white,
-                                    border: yellow,
-                                    height: 70.0,
-                                    child: new Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        new Text('5 Hari', style: big),
-                                        new Text('Rp 25,000/hari',
-                                            style: medium)
-                                      ],
-                                    ),
+                                  margin: new EdgeInsets.only(right: 4.0),
+                                  fill: _5Hari ? yellow : Colors.white,
+                                  border: yellow,
+                                  height: 70.0,
+                                  child: new Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      new Text('5 Hari',
+                                          style: _5Hari ? bigWhite : big),
+                                      new Text('Rp 25,000/hari',
+                                          style: _5Hari ? mediumWhite : medium)
+                                    ],
                                   ),
                                 ),
                               ),
                               new Expanded(
-                                child: new GestureDetector(
-                                  child: new MainButton(
-                                    margin: new EdgeInsets.only(right: 8.0),
-                                    color: Colors.white,
-                                    height: 70.0,
-                                    border: yellow,
-                                    child: new Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        new Text('Pilih Sendiri', style: big),
-                                        new Text('Min. 2 hari', style: medium)
-                                      ],
-                                    ),
+                                child: new ToggleButton(
+                                  margin: new EdgeInsets.only(left: 4.0),
+                                  fill: _pilihSendiri ? yellow : Colors.white,
+                                  toggel: () {
+                                    _handleLangganan(10, 24250);
+                                  },
+                                  height: 70.0,
+                                  border: yellow,
+                                  child: new Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      new Text(_pilihSendiri?"$_hari Hari":'Pilih Sendiri', style: _pilihSendiri ? bigWhite : big),
+                                      new Text(_pilihSendiri?"Rp ${fnumb(_perbox)}":'Min. 2 hari', style: _pilihSendiri ? mediumWhite : medium)
+                                    ],
                                   ),
                                 ),
                               ),

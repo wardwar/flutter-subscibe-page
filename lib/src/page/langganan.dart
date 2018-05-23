@@ -5,11 +5,15 @@ import 'package:kulina/resources/toggle_button.dart';
 import 'package:intl/intl.dart';
 import 'package:kulina/src/calendar/calendar.dart';
 import 'package:date_utils/date_utils.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
 
 class LanggananPage extends StatefulWidget {
   LanggananPage({Key key, this.title}) : super(key: key);
   final String title;
   final NumberFormat f = new NumberFormat();
+  final enDatesFuture = initializeDateFormatting('in_ID', null);
+  final DateFormat d = new DateFormat("EEEE, d MMM y","in_ID");
 
   @override
   _Langganan createState() => new _Langganan();
@@ -532,7 +536,7 @@ class _Langganan extends State<LanggananPage> {
                                   ],
                                 ),
                                 new Text(
-                                  'Mulai Jumat, 13 April 2018',
+                                  'Mulai ${widget.d.format(_dateCallback[0])}',
                                   style: new TextStyle(
                                     color: Colors.grey,
                                     fontSize: 14.0,

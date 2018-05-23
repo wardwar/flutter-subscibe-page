@@ -373,7 +373,11 @@ class _Langganan extends State<LanggananPage> {
                                   margin:
                                   new EdgeInsets.symmetric(vertical: 32.0),
                                   decoration: mainCard,
-                                  child: new Calendar(),
+                                  child: new Calendar(
+                                    onDateSelected: (DateTime d){
+
+                                    },
+                                  ),
                                   height: 350.0,
                                 ),
                               ),

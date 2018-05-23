@@ -24,19 +24,20 @@ class _Langganan extends State<LanggananPage> {
   bool _10Hari = false;
   bool _5Hari = true;
   bool _pilihSendiri = false;
+  List<DateTime> _dateCallback;
 
   void _handleHari(int hari) {
     setState(() {
       _resetButton();
-      if (hari == 20){
+      if (hari == 20) {
         _20Hari = true;
         selectedData.addAll(dayRangeIgnoreHoliday(20));
       }
-      else if (hari == 10){
+      else if (hari == 10) {
         _10Hari = true;
         selectedData.addAll(dayRangeIgnoreHoliday(10));
       }
-      else if (hari == 5){
+      else if (hari == 5) {
         _5Hari = true;
         selectedData.addAll(dayRangeIgnoreHoliday(5));
       }
@@ -59,8 +60,10 @@ class _Langganan extends State<LanggananPage> {
   @override
   void initState() {
     selectedData = List<DateTime>();
+    _dateCallback = List<DateTime>();
     var range = dayRangeIgnoreHoliday(5);
     selectedData.addAll(range);
+    _dateCallback.addAll(range);
     _handleLangganan(5, 25000);
     _hari = 5;
   }
@@ -84,20 +87,22 @@ class _Langganan extends State<LanggananPage> {
     return newRange;
   }
 
-  List<DateTime> _addDays(List<DateTime> range,DateTime until, int days){
+  List<DateTime> _addDays(List<DateTime> range, DateTime until, int days) {
     var c = 1;
     var lenght = range.length;
     while (lenght < days) {
       var newDate = until.add(new Duration(days: c));
-      if(range.contains(newDate))
+      if (range.contains(newDate))
         c++;
-      else{
+      else {
         range.add(newDate);
-        var newRange = range.where((DateTime date) => date.weekday != 6 && date.weekday != 7).toList();
+        var newRange = range.where((DateTime date) =>
+        date.weekday != 6 && date.weekday != 7).toList();
         lenght = newRange.length;
       }
     }
-    return range.where((DateTime date) => date.weekday != 6 && date.weekday != 7).toList();
+    return range.where((DateTime date) =>
+    date.weekday != 6 && date.weekday != 7).toList();
   }
 
   void _boxSub() {
@@ -113,6 +118,29 @@ class _Langganan extends State<LanggananPage> {
       _box += 1;
     });
     _handleLangganan(_hari, _perbox);
+  }
+
+  void _handlePilihSendiri() {
+    showDialog(context: context,
+      barrierDismissible: true,
+      builder: dialogPilihSendiri,);
+  }
+
+  Widget dialogPilihSendiri(BuildContext context) {
+    return new Dialog(
+        child:
+        new Column(
+            children: <Widget>[
+        new Text("Pilih Priode Langganan"),
+        new Row(
+          children: <Widget>[
+            new TextFormField(
+
+            )
+          ],
+        )
+        ],
+    ));
   }
 
   void _handleLangganan(int hari, int harga) {
@@ -169,14 +197,20 @@ class _Langganan extends State<LanggananPage> {
                             child: new Text(
                               "Pengiriman",
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.body2,
+                              style: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .body2,
                             )),
                         new Container(
                             width: 80.0,
                             child: new Text(
                               "Pembayaran",
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.body2,
+                              style: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .body2,
                             )),
                       ],
                     ),
@@ -285,7 +319,7 @@ class _Langganan extends State<LanggananPage> {
                           ),
                           new Padding(
                             padding:
-                                new EdgeInsets.only(bottom: 16.0, top: 32.0),
+                            new EdgeInsets.only(bottom: 16.0, top: 32.0),
                             child: new Text('Lama Langganan',
                                 textAlign: TextAlign.end, style: big),
                           ),
@@ -298,7 +332,7 @@ class _Langganan extends State<LanggananPage> {
                                   },
                                   margin: new EdgeInsets.only(
                                       right: 4.0, bottom: 8.0),
-                                  fill: _20Hari?yellow:Colors.white,
+                                  fill: _20Hari ? yellow : Colors.white,
                                   border: yellow,
                                   height: 70.0,
                                   child: new Column(
@@ -362,15 +396,24 @@ class _Langganan extends State<LanggananPage> {
                                   margin: new EdgeInsets.only(left: 4.0),
                                   fill: _pilihSendiri ? yellow : Colors.white,
                                   toggel: () {
-                                    _handleLangganan(10, 24250);
+                                    _handlePilihSendiri();
                                   },
                                   height: 70.0,
                                   border: yellow,
                                   child: new Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
-                                      new Text(_pilihSendiri?"$_hari Hari":'Pilih Sendiri', style: _pilihSendiri ? bigWhite : big),
-                                      new Text(_pilihSendiri?"Rp ${fnumb(_perbox)}":'Min. 2 hari', style: _pilihSendiri ? mediumWhite : medium)
+                                      new Text(_pilihSendiri
+                                          ? "$_hari Hari"
+                                          : 'Pilih Sendiri',
+                                          style: _pilihSendiri
+                                              ? bigWhite
+                                              : big),
+                                      new Text(_pilihSendiri
+                                          ? "Rp ${fnumb(_perbox)}"
+                                          : 'Min. 2 hari', style: _pilihSendiri
+                                          ? mediumWhite
+                                          : medium)
                                     ],
                                   ),
                                 ),
@@ -382,12 +425,26 @@ class _Langganan extends State<LanggananPage> {
                               new Expanded(
                                 child: new Container(
                                   margin:
-                                      new EdgeInsets.symmetric(vertical: 32.0),
+                                  new EdgeInsets.symmetric(vertical: 32.0),
                                   decoration: mainCard,
                                   child: new ConstrainedBox(
                                     constraints: new BoxConstraints(),
                                     child: new Calendar(
-                                      onDateSelected: (a) {},
+                                      onDateSelected: (List<DateTime> dateCallback) {
+                                        setState(() {
+                                          _dateCallback.clear();
+                                          _dateCallback.addAll(dateCallback);
+                                          _hari = _dateCallback.length;
+                                          var harga;
+                                          if(_hari >0 && _hari < 10)
+                                            harga = 25000;
+                                          else if(_hari > 10 && _hari < 20)
+                                            harga = 24250;
+                                          else
+                                            harga = 22500;
+                                          _handleLangganan(_hari, harga);
+                                        });
+                                      },
                                       selectedData: selectedData,
                                     ),
                                   ),
@@ -406,12 +463,12 @@ class _Langganan extends State<LanggananPage> {
                                         new Flexible(
                                           child: new Column(
                                             crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                             children: <Widget>[
                                               new Text('Pro Tips',
                                                   style: new TextStyle(
                                                       fontWeight:
-                                                          FontWeight.bold,
+                                                      FontWeight.bold,
                                                       fontSize: 14.0,
                                                       color: Colors.black87)),
                                               new Text(
@@ -438,56 +495,60 @@ class _Langganan extends State<LanggananPage> {
                       children: <Widget>[
                         new Expanded(
                             child: new Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            new Padding(
-                              padding: new EdgeInsets.only(bottom: 16.0),
-                              child: new Text('Rincian Langganan',
-                                  textAlign: TextAlign.left, style: big),
-                            ),
-                            new Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                new Text('Harga per box', style: medium),
+                                new Padding(
+                                  padding: new EdgeInsets.only(bottom: 16.0),
+                                  child: new Text('Rincian Langganan',
+                                      textAlign: TextAlign.left, style: big),
+                                ),
+                                new Row(
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceBetween,
+                                  children: <Widget>[
+                                    new Text('Harga per box', style: medium),
+                                    new Text(
+                                      'Rp ${fnumb(_perbox)}',
+                                      style: medium,
+                                    ),
+                                  ],
+                                ),
+                                new Divider(),
+                                new Row(
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceBetween,
+                                  children: <Widget>[
+                                    new Text('Jumlah Box', style: medium),
+                                    new Text('$_box Box', style: medium),
+                                  ],
+                                ),
+                                new Divider(),
+                                new Row(
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceBetween,
+                                  children: <Widget>[
+                                    new Text('Lama Langganan', style: medium),
+                                    new Text('$_hari Hari', style: medium),
+                                  ],
+                                ),
                                 new Text(
-                                  'Rp ${fnumb(_perbox)}',
-                                  style: medium,
+                                  'Mulai Jumat, 13 April 2018',
+                                  style: new TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                                new Divider(),
+                                new Row(
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceBetween,
+                                  children: <Widget>[
+                                    new Text('Total', style: big),
+                                    new Text('Rp ${fnumb(_total)}', style: big),
+                                  ],
                                 ),
                               ],
-                            ),
-                            new Divider(),
-                            new Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                new Text('Jumlah Box', style: medium),
-                                new Text('$_box Box', style: medium),
-                              ],
-                            ),
-                            new Divider(),
-                            new Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                new Text('Lama Langganan', style: medium),
-                                new Text('$_hari Hari', style: medium),
-                              ],
-                            ),
-                            new Text(
-                              'Mulai Jumat, 13 April 2018',
-                              style: new TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14.0,
-                              ),
-                            ),
-                            new Divider(),
-                            new Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                new Text('Total', style: big),
-                                new Text('Rp ${fnumb(_total)}', style: big),
-                              ],
-                            ),
-                          ],
-                        )),
+                            )),
                       ],
                     ),
                   ),
@@ -510,6 +571,6 @@ class _Langganan extends State<LanggananPage> {
                 ],
               )),
         ) // This trailing comma makes auto-formatting nicer for build methods.
-        );
+    );
   }
 }

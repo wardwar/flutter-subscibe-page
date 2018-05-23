@@ -28,12 +28,18 @@ class _Langganan extends State<LanggananPage> {
   void _handleHari(int hari) {
     setState(() {
       _resetButton();
-      if (hari == 20)
+      if (hari == 20){
         _20Hari = true;
-      else if (hari == 10)
+        selectedData.addAll(dayRangeIgnoreHoliday(20));
+      }
+      else if (hari == 10){
         _10Hari = true;
-      else if (hari == 5)
+        selectedData.addAll(dayRangeIgnoreHoliday(10));
+      }
+      else if (hari == 5){
         _5Hari = true;
+        selectedData.addAll(dayRangeIgnoreHoliday(5));
+      }
       else
         _pilihSendiri = true;
     });
@@ -52,32 +58,46 @@ class _Langganan extends State<LanggananPage> {
 
   @override
   void initState() {
-    var range = dayRangeIgnoreHoliday();
-    selectedData = range;
+    selectedData = List<DateTime>();
+    var range = dayRangeIgnoreHoliday(5);
+    selectedData.addAll(range);
     _handleLangganan(5, 25000);
     _hari = 5;
   }
 
-  List<DateTime> dayRangeIgnoreHoliday() {
+  List<DateTime> dayRangeIgnoreHoliday(int days) {
+    selectedData.clear();
     var now = new DateTime.now().add(new Duration(days: 1));
     var first = new DateTime(now.year, now.month, now.day);
-    var until = first.add(new Duration(days: 5));
+    var until = first.add(new Duration(days: days));
     var range = Utils
         .daysInRange(first, until)
         .toList()
         .where((DateTime date) => date.weekday != 6 && date.weekday != 7)
         .toList();
 
-    if (range.length < 5) {
+    if (range.length < days) {
       range.add(until);
     }
+    List<DateTime> newRange = _addDays(range, until, days);
 
-    while (range.length < 5) {
-      var newDate = until.add(new Duration(days: 1));
-      range.add(newDate);
-      range.where((DateTime date) => date.weekday != 6 || date.weekday != 7);
+    return newRange;
+  }
+
+  List<DateTime> _addDays(List<DateTime> range,DateTime until, int days){
+    var c = 1;
+    var lenght = range.length;
+    while (lenght < days) {
+      var newDate = until.add(new Duration(days: c));
+      if(range.contains(newDate))
+        c++;
+      else{
+        range.add(newDate);
+        var newRange = range.where((DateTime date) => date.weekday != 6 && date.weekday != 7).toList();
+        lenght = newRange.length;
+      }
     }
-    return range;
+    return range.where((DateTime date) => date.weekday != 6 && date.weekday != 7).toList();
   }
 
   void _boxSub() {

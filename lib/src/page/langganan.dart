@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kulina/resources/decoration.dart';
-import 'package:small_calendar/small_calendar.dart';
 import 'package:kulina/resources/main_button.dart';
 import 'package:intl/intl.dart';
+import 'package:kulina/src/calendar/calendar.dart';
 
 class LanggananPage extends StatefulWidget {
   LanggananPage({Key key, this.title}) : super(key: key);
@@ -371,27 +371,10 @@ class _Langganan extends State<LanggananPage> {
                               new Expanded(
                                 child: new Container(
                                   margin:
-                                      new EdgeInsets.symmetric(vertical: 32.0),
+                                  new EdgeInsets.symmetric(vertical: 32.0),
                                   decoration: mainCard,
-                                  child: new SmallCalendarData(
-                                    child: new SmallCalendarStyle(
-                                      weekdayIndicationStyle:
-                                          new WeekdayIndicationStyle(
-                                        weekdayIndicationHeight: 50.0,
-                                        backgroundColor: Colors.white,
-                                      ),
-                                      child: new SmallCalendarPager(
-                                        scrollDirection: Axis.horizontal,
-                                        pageBuilder: (BuildContext context,
-                                            DateTime month) {
-                                          return new SmallCalendar(
-                                            month: month,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  height: 300.0,
+                                  child: new Calendar(),
+                                  height: 350.0,
                                 ),
                               ),
                             ],

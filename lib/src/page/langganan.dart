@@ -375,7 +375,6 @@ class _Langganan extends State<LanggananPage> {
                                   decoration: mainCard,
                                   child: new Calendar(
                                     onDateSelected: (DateTime d){
-
                                     },
                                   ),
                                   height: 350.0,

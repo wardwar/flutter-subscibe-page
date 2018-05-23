@@ -27,23 +27,22 @@ class Calendar extends StatefulWidget {
 class _CalendarState extends State<Calendar> {
   final calendarUtils = new Utils();
   DateTime today = new DateTime.now();
-  DateTime batasBawah;
+  DateTime batasBawah= new DateTime.now(); 
   DateTime batasAtas = new DateTime.now().add(new Duration(days: 65));
   
   List<DateTime> selectedMonthsDays;
-  DateTime _selectedDate;
+  List<DateTime> _selectedDate;
   Tuple2<DateTime, DateTime> selectedRange;
   String currentMonth;
   String displayMonth;
   
 
-  DateTime get selectedDate => _selectedDate;
+  List<DateTime> get selectedDate => _selectedDate;
 
   void initState() {
     super.initState();
-    batasBawah = new DateTime(today.year,today.month,today.day);
+    _selectedDate = List<DateTime>();
     selectedMonthsDays = Utils.daysInMonth(today);
-    _selectedDate = today;
     displayMonth = Utils.formatMonth(Utils.firstDayOfWeek(today));
   }
 
@@ -145,7 +144,7 @@ class _CalendarState extends State<Calendar> {
           monthEnded = true;
         }
 
-        before =day.millisecondsSinceEpoch < batasBawah.millisecondsSinceEpoch ?true:false;
+        before =day.isBefore(batasBawah) ?true:false;
         if (Utils.isFirstDayOfMonth(day)) {
           monthStarted = true;
         }
@@ -161,9 +160,10 @@ class _CalendarState extends State<Calendar> {
             new CalendarTile(
               onDateSelected: before ? null : () => handleSelectedDateAndUserCallback(day),
               date: day,
+              isToday: Utils.isSameDay(day, batasBawah),
               isDisable: before,
               dateStyles: configureDateStyle(monthStarted, monthEnded,day),
-              isSelected: Utils.isSameDay(selectedDate, day),
+              isSelected: selectedDate.contains(day),
             ),
           );
         }
@@ -201,7 +201,7 @@ class _CalendarState extends State<Calendar> {
     today = new DateTime.now();
 
     setState(() {
-      _selectedDate = today;
+      _selectedDate.clear();
       displayMonth = Utils.formatMonth(Utils.firstDayOfWeek(today));
     });
   }
@@ -260,7 +260,7 @@ class _CalendarState extends State<Calendar> {
 
   void handleSelectedDateAndUserCallback(DateTime day) {
     setState(() {
-      _selectedDate = day;
+      _selectedDate.add(day);
     });
     if (widget.onDateSelected != null) {
       widget.onDateSelected(day);

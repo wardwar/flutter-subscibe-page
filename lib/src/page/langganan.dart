@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:kulina/src/calendar/calendar.dart';
 import 'package:date_utils/date_utils.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'result_dialog.dart';
 
 
 class LanggananPage extends StatefulWidget {
@@ -32,7 +33,6 @@ class _Langganan extends State<LanggananPage> {
   bool _pilihSendiri = false;
   List<DateTime> _dateCallback;
   int _harisendiri = 2;
-  int _hargasendiri =25000;
 
   void _handleHari(int hari) {
     setState(() {
@@ -202,6 +202,18 @@ class _Langganan extends State<LanggananPage> {
     )) {
 
     }
+  }
+
+  void _openResult() {
+    Navigator.of(context).push(new MaterialPageRoute<Null>(
+        builder: (BuildContext context) {
+          return new ResultDialog(
+              selectedDate: selectedData,
+              jumlahBox: _box,
+              priode: _hari,);
+        },
+        fullscreenDialog: true
+    ));
   }
 
   @override
@@ -602,7 +614,7 @@ class _Langganan extends State<LanggananPage> {
                     ),
                   ),
                   new GestureDetector(
-//                    onTap: _handleBottomSheet,
+                    onTap: _openResult,
                     child: new Container(
                       height: 70.0,
                       decoration: mainButton,

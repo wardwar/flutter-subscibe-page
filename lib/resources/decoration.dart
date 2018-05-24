@@ -17,6 +17,7 @@ TextStyle medium = new TextStyle(fontSize: 16.0, color: Colors.black54);
 TextStyle mediumWhite = new TextStyle(fontSize: 16.0, color: Colors.white);
 
 final step = new BoxDecoration(
+  color: Colors.white,
   border: new Border.all(
     color: const Color(0xffdadedf),
     width: 3.0,
@@ -25,6 +26,7 @@ final step = new BoxDecoration(
 );
 
 final stepActive = new BoxDecoration(
+  color: Colors.white,
   border: new Border.all(
     color: yellow,
     width: 3.0,

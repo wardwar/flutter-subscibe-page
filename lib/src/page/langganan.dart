@@ -243,72 +243,108 @@ class _Langganan extends State<LanggananPage> {
                 child: new Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    new Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        new Container(
-                            width: 80.0,
-                            child: new Text("Mulai",
-                                textAlign: TextAlign.center,
-                                style: new TextStyle(
-                                    color: const Color(0xfffd9714)))),
-                        new Container(
-                            width: 80.0,
-                            child: new Text(
-                              "Pengiriman",
-                              textAlign: TextAlign.center,
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .body2,
-                            )),
-                        new Container(
-                            width: 80.0,
-                            child: new Text(
-                              "Pembayaran",
-                              textAlign: TextAlign.center,
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .body2,
-                            )),
-                      ],
-                    ),
+//                    new Row(
+//                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                      children: <Widget>[
+//                        new Container(
+//                            width: 80.0,
+//                            child: new Text("Mulai",
+//                                textAlign: TextAlign.center,
+//                                style: new TextStyle(
+//                                    color: const Color(0xfffd9714)))),
+//                        new Container(
+//                            width: 80.0,
+//                            child: new Text(
+//                              "Pengiriman",
+//                              textAlign: TextAlign.center,
+//                              style: Theme
+//                                  .of(context)
+//                                  .textTheme
+//                                  .body2,
+//                            )),
+//                        new Container(
+//                            width: 80.0,
+//                            child: new Text(
+//                              "Pembayaran",
+//                              textAlign: TextAlign.center,
+//                              style: Theme
+//                                  .of(context)
+//                                  .textTheme
+//                                  .body2,
+//                            )),
+//                      ],
+//                    ),
                     new Padding(
-                      padding: new EdgeInsets.symmetric(horizontal: 74.0),
-                      child: new Row(
+                      padding: new EdgeInsets.symmetric(horizontal: 60.0),
+                      child:
+                      new Stack(
                         children: <Widget>[
-                          new Column(
-                            children: <Widget>[
-                              new Container(
-                                width: 20.0,
-                                height: 20.0,
-                                decoration: stepActive,
-                              ),
-                            ],
+                          new Container(
+                            height: 72.0,
+                            padding: new EdgeInsets.only(bottom: 23.0,right: 30.0,left: 10.0),
+                            child: new Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                rowDivider
+                              ],
+                            ),
                           ),
-                          rowDivider,
-                          new Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              new Container(
-                                width: 20.0,
-                                height: 20.0,
-                                decoration: step,
-                              ),
-                            ],
+                          new Container(
+                            height: 72.0,
+                            child: new Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                new Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    new Text("Mulai",
+                                        textAlign: TextAlign.center,
+                                        style: new TextStyle(
+                                            color: const Color(0xfffd9714))),
+                                    new Container(
+                                      width: 20.0,
+                                      height: 20.0,
+                                      decoration: stepActive,
+                                    ),
+                                  ],
+                                ),
+//                              rowDivider,
+                                new Padding(padding: new EdgeInsets.only(left: 20.0),
+                                  child: new Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    new Text("Pengiriman",
+                                        textAlign: TextAlign.center,
+                                        style: new TextStyle(
+                                            color: const Color(0xfffd9714))),
+                                    new Container(
+                                      width: 20.0,
+                                      height: 20.0,
+                                      decoration: step,
+                                    ),
+                                  ],
+                                ),
+                                ),
+
+//                              rowDivider,
+                                new Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    new Text("Pembayaran",
+                                        textAlign: TextAlign.center,
+                                        style: new TextStyle(
+                                            color: const Color(0xfffd9714))),
+                                    new Container(
+                                      width: 20.0,
+                                      height: 20.0,
+                                      decoration: step,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                          rowDivider,
-                          new Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              new Container(
-                                width: 20.0,
-                                height: 20.0,
-                                decoration: step,
-                              ),
-                            ],
-                          ),
+
                         ],
                       ),
                     ),

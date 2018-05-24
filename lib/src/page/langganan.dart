@@ -31,6 +31,8 @@ class _Langganan extends State<LanggananPage> {
   bool _5Hari = true;
   bool _pilihSendiri = false;
   List<DateTime> _dateCallback;
+  int _harisendiri = 2;
+  int _hargasendiri =25000;
 
   void _handleHari(int hari) {
     setState(() {
@@ -140,6 +142,66 @@ class _Langganan extends State<LanggananPage> {
 
   String fnumb(int number) {
     return widget.f.format(number);
+  }
+
+
+  Future<Null> _pilihSendiriDialog() async {
+    switch (await showDialog<LanggananPage>(
+        context: context,
+        builder: (BuildContext context) {
+          return new SimpleDialog(
+            title: new Text('Pilih Priode Langganan',style: medium),
+            children: <Widget>[
+              new Padding(
+                  padding: new EdgeInsets.all(16.0),
+                child: new Column(
+                  children: <Widget>[
+                    new TextField(
+                      onChanged: (text){
+                        setState(() {
+
+                            _harisendiri = int.parse(text);
+                        });
+                      },
+                      style: medium,
+                      keyboardType: TextInputType.number,
+                    ),
+                  ],
+                ),
+              ),
+              new RaisedButton(color:yellow,
+                onPressed: (){
+                  if(_harisendiri < 2)
+                    showDialog(context: context,builder: (BuildContext context){
+                      return new AlertDialog(
+                        content: new Text("Pilih Minimal 2 hari",style: medium),
+                      );
+                    });
+                  else if(_harisendiri > 40)
+                    showDialog(context: context,builder: (BuildContext context){
+                      return new AlertDialog(
+                        content: new Text("maksimal 40 hari",style: medium),
+                      );
+                    });
+                  else {
+                    var harga;
+                    if (_harisendiri > 0 && _harisendiri < 10)
+                      harga = 25000;
+                    else if (_harisendiri > 10 && _harisendiri < 20)
+                      harga = 24250;
+                    else
+                      harga = 22500;
+                    _handleLangganan(_harisendiri, harga);
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: new Text("OK",style: mediumWhite,),)
+            ],
+          );
+        }
+    )) {
+
+    }
   }
 
   @override
@@ -382,7 +444,7 @@ class _Langganan extends State<LanggananPage> {
                                   margin: new EdgeInsets.only(left: 4.0),
                                   fill: _pilihSendiri ? yellow : Colors.white,
                                   toggel: (){
-//                                    _pilihSendiriDialog();
+                                    _pilihSendiriDialog();
                                   },
                                   height: 70.0,
                                   border: yellow,

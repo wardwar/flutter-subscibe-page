@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kulina/resources/decoration.dart';
 import 'package:kulina/resources/hover_button.dart';
@@ -124,28 +126,6 @@ class _Langganan extends State<LanggananPage> {
     _handleLangganan(_hari, _perbox);
   }
 
-  void _handlePilihSendiri() {
-    showDialog(context: context,
-      barrierDismissible: true,
-      builder: dialogPilihSendiri,);
-  }
-
-  Widget dialogPilihSendiri(BuildContext context) {
-    return new Dialog(
-        child:
-        new Column(
-            children: <Widget>[
-        new Text("Pilih Priode Langganan"),
-        new Row(
-          children: <Widget>[
-            new TextFormField(
-
-            )
-          ],
-        )
-        ],
-    ));
-  }
 
   void _handleLangganan(int hari, int harga) {
     setState(() {
@@ -154,7 +134,9 @@ class _Langganan extends State<LanggananPage> {
       _total = _box * (_hari * harga);
       _handleHari(hari);
     });
+    
   }
+  
 
   String fnumb(int number) {
     return widget.f.format(number);
@@ -399,8 +381,8 @@ class _Langganan extends State<LanggananPage> {
                                 child: new ToggleButton(
                                   margin: new EdgeInsets.only(left: 4.0),
                                   fill: _pilihSendiri ? yellow : Colors.white,
-                                  toggel: () {
-                                    _handlePilihSendiri();
+                                  toggel: (){
+//                                    _pilihSendiriDialog();
                                   },
                                   height: 70.0,
                                   border: yellow,
@@ -438,6 +420,7 @@ class _Langganan extends State<LanggananPage> {
                                         setState(() {
                                           _dateCallback.clear();
                                           _dateCallback.addAll(dateCallback);
+                                          _dateCallback.sort();
                                           _hari = _dateCallback.length;
                                           var harga;
                                           if(_hari >0 && _hari < 10)
@@ -556,20 +539,23 @@ class _Langganan extends State<LanggananPage> {
                       ],
                     ),
                   ),
-                  new Container(
-                    height: 70.0,
-                    decoration: mainButton,
-                    child: new Row(
-                      children: <Widget>[
-                        new Expanded(
-                          child: new Text("Selanjutnya",
-                              textAlign: TextAlign.center,
-                              style: new TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.0)),
-                        )
-                      ],
+                  new GestureDetector(
+//                    onTap: _handleBottomSheet,
+                    child: new Container(
+                      height: 70.0,
+                      decoration: mainButton,
+                      child: new Row(
+                        children: <Widget>[
+                          new Expanded(
+                            child: new Text("Selanjutnya",
+                                textAlign: TextAlign.center,
+                                style: new TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0)),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ],
